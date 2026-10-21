@@ -6,6 +6,7 @@ A private, single-user launcher for personal apps. One platform, many applicatio
 - **Spec:** [`HUB_SPEC.md`](HUB_SPEC.md)
 - **Adding an app:** [`docs/adding-an-app.md`](docs/adding-an-app.md)
 - **Design system:** [`docs/design-system.md`](docs/design-system.md)
+- **Deployment & operations:** [`docs/deployment.md`](docs/deployment.md)
 - **App contract:** [`src/modules/README.md`](src/modules/README.md)
 - **Decisions:** [`docs/decisions/`](docs/decisions/)
 
@@ -41,18 +42,25 @@ To sign in, enter the email at `/login`. Local emails aren't really sent; read t
 - Conventions for app tables, RLS and storage: [`docs/architecture.md` §8](docs/architecture.md#8-data--storage-conventions-for-future-apps).
 - **Gotcha:** in `supabase/config.toml`, `[auth.email] enable_signup` turns the email login method itself on or off, so keep it `true`. Sign-ups are blocked by `[auth] enable_signup = false`. In the hosted dashboard, likewise keep the Email provider enabled and turn **Allow new users to sign up** off.
 
+## Testing
+
+- `pnpm test`: unit and component tests (Vitest). No services needed.
+- `pnpm test:e2e`: end-to-end tests (Playwright) against **local Supabase**, so run `pnpm db:start` first. It builds the app and serves it on port 3100 with its own test identity (`e2e@hub.test`), signs in through the real UI by reading codes from Mailpit, and runs axe accessibility checks on desktop and mobile. First time only: `pnpm exec playwright install chromium`.
+- CI (GitHub Actions) runs both on every push and pull request.
+
 ## Scripts
 
-| Script                              | Purpose                               |
-| ----------------------------------- | ------------------------------------- |
-| `pnpm dev`                          | Start the dev server                  |
-| `pnpm build` / `pnpm start`         | Production build / serve              |
-| `pnpm typecheck`                    | TypeScript, no emit                   |
-| `pnpm lint`                         | ESLint                                |
-| `pnpm format` / `pnpm format:check` | Prettier                              |
-| `pnpm test`                         | Unit and component tests (Vitest)     |
-| `pnpm check`                        | Everything above, as CI would run it  |
-| `pnpm db:start` / `pnpm db:stop`    | Start / stop local Supabase           |
-| `pnpm db:status`                    | Local URLs and keys                   |
-| `pnpm db:reset`                     | Recreate the local DB from migrations |
-| `pnpm db:migration <name>`          | Create a new migration file           |
+| Script                              | Purpose                                    |
+| ----------------------------------- | ------------------------------------------ |
+| `pnpm dev`                          | Start the dev server                       |
+| `pnpm build` / `pnpm start`         | Production build / serve                   |
+| `pnpm typecheck`                    | TypeScript, no emit                        |
+| `pnpm lint`                         | ESLint                                     |
+| `pnpm format` / `pnpm format:check` | Prettier                                   |
+| `pnpm test`                         | Unit and component tests (Vitest)          |
+| `pnpm test:e2e`                     | End-to-end tests (needs `pnpm db:start`)   |
+| `pnpm check`                        | Typecheck, lint, format, unit tests, build |
+| `pnpm db:start` / `pnpm db:stop`    | Start / stop local Supabase                |
+| `pnpm db:status`                    | Local URLs and keys                        |
+| `pnpm db:reset`                     | Recreate the local DB from migrations      |
+| `pnpm db:migration <name>`          | Create a new migration file                |
