@@ -1,12 +1,25 @@
-import { PageHeader } from "@/components/platform/page-header";
-import { ThemeControl } from "@/components/platform/theme-control";
+import { Settings } from "lucide-react";
+import Link from "next/link";
 
-// Temporary home until the launcher lands in Milestone 3.
+import { AppGrid } from "@/components/platform/app-grid";
+import { Button } from "@/components/ui/button";
+import { getLauncherApps } from "@/platform/registry";
+
 export default function HomePage() {
   return (
-    <main className="mx-auto max-w-5xl space-y-8 px-gutter py-12">
-      <PageHeader title="HUB" description="Your personal apps, in one place." />
-      <ThemeControl />
-    </main>
+    <div className="mx-auto flex min-h-dvh max-w-5xl flex-col px-gutter">
+      <header className="flex h-16 items-center justify-between md:h-20">
+        <p className="text-lg font-semibold tracking-tight">HUB</p>
+        <Button variant="ghost" size="icon-lg" className="size-11 rounded-full" asChild>
+          <Link href="/settings" aria-label="Settings">
+            <Settings aria-hidden="true" className="size-5" />
+          </Link>
+        </Button>
+      </header>
+      <main className="flex-1 pt-6 pb-16 md:pt-12">
+        <h1 className="sr-only">Apps</h1>
+        <AppGrid apps={getLauncherApps()} />
+      </main>
+    </div>
   );
 }

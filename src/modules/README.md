@@ -1,6 +1,6 @@
 # Modules
 
-Each personal app (Finance, Wardrobe, …) lives here as `src/modules/<appId>/`. Phase 1 ships none.
+Each personal app (Finance, Wardrobe, …) lives here as `src/modules/<appId>/`. Phase 1 ships none. Step-by-step guide: [`docs/adding-an-app.md`](../../docs/adding-an-app.md).
 
 ## Contract
 

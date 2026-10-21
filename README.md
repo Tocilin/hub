@@ -4,6 +4,8 @@ A private, single-user launcher for personal apps. One platform, many applicatio
 
 - **Architecture:** [`docs/architecture.md`](docs/architecture.md)
 - **Spec:** [`HUB_SPEC.md`](HUB_SPEC.md)
+- **Adding an app:** [`docs/adding-an-app.md`](docs/adding-an-app.md)
+- **Design system:** [`docs/design-system.md`](docs/design-system.md)
 - **App contract:** [`src/modules/README.md`](src/modules/README.md)
 - **Decisions:** [`docs/decisions/`](docs/decisions/)
 
