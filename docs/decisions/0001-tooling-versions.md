@@ -12,3 +12,7 @@ Date: 2026-10-21 · Status: Accepted
 - **pnpm 10**, pinned via `packageManager`.
 
 **Revisit** when `eslint-config-next` supports ESLint 10, and when Next.js documents TypeScript 7 support.
+
+## Amendment — 2026-10-21: `cn` package
+
+`shadcn add` (v4.22) generates components that import `cn` from the [`cn`](https://github.com/shadcn-ui/cn) package (maintained by shadcn; a compiled drop-in for `clsx` + `tailwind-merge`) and reinstalls it on every add. Rewriting those imports on each `add` would be ongoing friction, so HUB adopts `cn` and `@/lib/utils` re-exports it. `clsx` and `tailwind-merge` are removed. `cn` is young (0.5); if it misbehaves, `@/lib/utils` can go back to `twMerge(clsx(...))` and generated imports can be pointed there.

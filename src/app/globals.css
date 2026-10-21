@@ -1,3 +1,191 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-/* Design tokens and themes arrive in Milestone 2. */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * HUB design tokens. Semantic names follow shadcn conventions so generated
+ * components work unchanged. Usage guide: docs/design-system.md.
+ * Raw values live in :root / .dark; @theme exposes them as Tailwind utilities.
+ */
+
+@theme inline {
+  /* Typography */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  /* Color — surfaces and text */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Color — interactive */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  /* Color — status */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-destructive: var(--destructive);
+
+  /* Color — app identity (tile backgrounds; white icons sit on these) */
+  --color-app-blue: var(--app-blue);
+  --color-app-green: var(--app-green);
+  --color-app-amber: var(--app-amber);
+  --color-app-rose: var(--app-rose);
+  --color-app-violet: var(--app-violet);
+  --color-app-teal: var(--app-teal);
+  --color-app-slate: var(--app-slate);
+
+  /* Layout */
+  --spacing-gutter: var(--gutter);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Elevation */
+  --shadow-raised: var(--shadow-raised);
+  --shadow-overlay: var(--shadow-overlay);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+}
+
+:root {
+  --radius: 0.75rem;
+  --gutter: 1rem;
+
+  --background: oklch(0.985 0 0);
+  --foreground: oklch(0.16 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.16 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.16 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+  --border: oklch(0.91 0 0);
+  --input: oklch(0.88 0 0);
+  --ring: oklch(0.45 0 0);
+
+  --primary: oklch(0.2 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.955 0 0);
+  --secondary-foreground: oklch(0.2 0 0);
+  --accent: oklch(0.95 0 0);
+  --accent-foreground: oklch(0.2 0 0);
+
+  --success: oklch(0.52 0.13 150);
+  --warning: oklch(0.55 0.13 70);
+  --destructive: oklch(0.55 0.22 27);
+
+  --app-blue: oklch(0.58 0.17 255);
+  --app-green: oklch(0.58 0.14 155);
+  --app-amber: oklch(0.6 0.15 55);
+  --app-rose: oklch(0.58 0.18 10);
+  --app-violet: oklch(0.56 0.18 295);
+  --app-teal: oklch(0.58 0.1 200);
+  --app-slate: oklch(0.5 0.03 260);
+
+  --shadow-raised: 0 1px 2px oklch(0 0 0 / 6%), 0 1px 3px oklch(0 0 0 / 4%);
+  --shadow-overlay: 0 8px 24px oklch(0 0 0 / 12%), 0 2px 6px oklch(0 0 0 / 6%);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.96 0 0);
+  --card: oklch(0.19 0 0);
+  --card-foreground: oklch(0.96 0 0);
+  --popover: oklch(0.22 0 0);
+  --popover-foreground: oklch(0.96 0 0);
+  --muted: oklch(0.24 0 0);
+  --muted-foreground: oklch(0.72 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 16%);
+  --ring: oklch(0.75 0 0);
+
+  --primary: oklch(0.93 0 0);
+  --primary-foreground: oklch(0.2 0 0);
+  --secondary: oklch(0.26 0 0);
+  --secondary-foreground: oklch(0.96 0 0);
+  --accent: oklch(0.27 0 0);
+  --accent-foreground: oklch(0.96 0 0);
+
+  --success: oklch(0.76 0.15 150);
+  --warning: oklch(0.8 0.14 80);
+  --destructive: oklch(0.7 0.19 22);
+
+  --app-blue: oklch(0.55 0.16 255);
+  --app-green: oklch(0.55 0.13 155);
+  --app-amber: oklch(0.57 0.14 55);
+  --app-rose: oklch(0.55 0.17 10);
+  --app-violet: oklch(0.53 0.17 295);
+  --app-teal: oklch(0.55 0.09 200);
+  --app-slate: oklch(0.48 0.03 260);
+
+  --shadow-raised: 0 1px 2px oklch(0 0 0 / 40%);
+  --shadow-overlay: 0 8px 24px oklch(0 0 0 / 50%), 0 2px 6px oklch(0 0 0 / 30%);
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: 2rem;
+  }
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --gutter: 3rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

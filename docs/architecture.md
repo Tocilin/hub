@@ -117,7 +117,7 @@ Static, typed, ordered by array position. Unit tests validate unique ids, id for
 ## 9. Design system
 
 - Semantic tokens as CSS variables in `globals.css` (`:root` and `.dark`), exposed via Tailwind v4 `@theme`.
-- Token names **follow shadcn conventions** (`background`, `card`, `muted`, `primary`, `border`, …) plus `surface-elevated`, `success`, `warning`, radius and motion tokens — avoiding a translation layer at the cost of slightly generic names.
+- Token names **follow shadcn conventions** (`background`, `card` = surface, `popover` = elevated surface, `muted`, `primary`, `border`, …) plus `success`, `warning`, app tile colors, gutter, shadow and motion tokens — avoiding a translation layer at the cost of slightly generic names. Full guide: [`design-system.md`](./design-system.md).
 - Light / Dark / System via `next-themes`; motion respects `prefers-reduced-motion`.
 - **Launcher:** OS-style grid — 3 columns on phone, 4 on tablet, 5–6 on desktop. Tile = rounded icon square + name. Coming-soon tiles are non-link elements with reduced emphasis, a "Soon" badge and `aria-disabled`. Settings in the top-right corner.
 
