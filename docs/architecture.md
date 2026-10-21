@@ -15,33 +15,33 @@ This document records the architecture and the decisions that deviate from or re
 
 ## 2. Stack
 
-| Concern | Choice |
-| --- | --- |
-| Framework | Next.js 16 (App Router, `proxy.ts`), React 19 |
-| Language | TypeScript, `strict` + `noUncheckedIndexedAccess` |
-| Styling | Tailwind CSS v4 (CSS-first `@theme`) + CSS variables |
-| Primitives | shadcn/ui + Radix, Lucide icons |
-| Theme | `next-themes` (Light / Dark / System, persisted per device) |
-| Data / Auth | Supabase Postgres + Auth via `@supabase/ssr` |
-| Validation | Zod |
-| Tests | Vitest + React Testing Library; Playwright + `@axe-core/playwright` |
-| Tooling | pnpm, ESLint (flat config), Prettier |
-| Runtime | Node 22 LTS (Node ≥ 20.9 works) |
-| Hosting | Vercel |
+| Concern     | Choice                                                              |
+| ----------- | ------------------------------------------------------------------- |
+| Framework   | Next.js 16 (App Router, `proxy.ts`), React 19                       |
+| Language    | TypeScript, `strict` + `noUncheckedIndexedAccess`                   |
+| Styling     | Tailwind CSS v4 (CSS-first `@theme`) + CSS variables                |
+| Primitives  | shadcn/ui + Radix, Lucide icons                                     |
+| Theme       | `next-themes` (Light / Dark / System, persisted per device)         |
+| Data / Auth | Supabase Postgres + Auth via `@supabase/ssr`                        |
+| Validation  | Zod                                                                 |
+| Tests       | Vitest + React Testing Library; Playwright + `@axe-core/playwright` |
+| Tooling     | pnpm, ESLint (flat config), Prettier                                |
+| Runtime     | Node 22 LTS (≥ 22.12)                                               |
+| Hosting     | Vercel                                                              |
 
 ## 3. Decisions that refine the spec
 
-| Spec item | Decision | Reason |
-| --- | --- | --- |
-| `apps/[appId]/` dynamic route | **No dynamic route.** Each real app adds a static folder `app/(platform)/apps/<appId>/` when it is built. | Real apps need their own layouts, loading/error boundaries and nested routes. Coming-soon tiles are not links, so they need no route; unbuilt URLs 404. |
-| Registry `path`, `order`, `icon: string`, `color?: string` | `path` derived from `id`; order = array order; `icon` is a `LucideIcon`; `color` is a token name from a fixed union. | Less to keep in sync; no string→icon map bundling every icon; colors stay theme- and contrast-safe. |
-| Wide `src/` tree (`features`, `design-system`, `types`, `storage`, …) | Four areas: `app`, `components`, `platform`, `modules` (+ `lib/utils.ts`). | Phase 1 features are a handful of files; tokens live in CSS, guidance in `docs/`. Empty folders are overhead. |
-| ~20 primitives upfront | Only what Phase 1 uses: Button, Input, Label, Card, Badge, ToggleGroup, Skeleton + AppTile, PageHeader, EmptyState, ErrorState, optional AppShell. | Adding a shadcn component takes seconds when an app needs it. |
-| Persisted preferences table | **No tables in Phase 1.** Theme is persisted per device by `next-themes`. | A single setting doesn't justify a DB round trip. Migration tooling is still set up and exercised. |
-| Search, staging, monitoring | None yet. Vercel logs + Instant Rollback, Supabase logs. Vercel preview deployments disabled or protected. | Previews would hit the production Supabase project and need extra auth redirect URLs. |
-| Lighthouse 90+ | Target kept; automated a11y via axe in E2E; Lighthouse run manually before release. | Lighthouse CI is disproportionate for one user. |
-| Login | **Email one-time code (6 digits).** | Magic links often open in the wrong browser context on iPad/mobile and home-screen web apps. |
-| Dev database | **Local Supabase via the Supabase CLI (Docker).** | Free, offline, safe migration testing, and a local inbox (Mailpit) for E2E login. |
+| Spec item                                                             | Decision                                                                                                                                           | Reason                                                                                                                                                  |
+| --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/[appId]/` dynamic route                                         | **No dynamic route.** Each real app adds a static folder `app/(platform)/apps/<appId>/` when it is built.                                          | Real apps need their own layouts, loading/error boundaries and nested routes. Coming-soon tiles are not links, so they need no route; unbuilt URLs 404. |
+| Registry `path`, `order`, `icon: string`, `color?: string`            | `path` derived from `id`; order = array order; `icon` is a `LucideIcon`; `color` is a token name from a fixed union.                               | Less to keep in sync; no string→icon map bundling every icon; colors stay theme- and contrast-safe.                                                     |
+| Wide `src/` tree (`features`, `design-system`, `types`, `storage`, …) | Four areas: `app`, `components`, `platform`, `modules` (+ `lib/utils.ts`).                                                                         | Phase 1 features are a handful of files; tokens live in CSS, guidance in `docs/`. Empty folders are overhead.                                           |
+| ~20 primitives upfront                                                | Only what Phase 1 uses: Button, Input, Label, Card, Badge, ToggleGroup, Skeleton + AppTile, PageHeader, EmptyState, ErrorState, optional AppShell. | Adding a shadcn component takes seconds when an app needs it.                                                                                           |
+| Persisted preferences table                                           | **No tables in Phase 1.** Theme is persisted per device by `next-themes`.                                                                          | A single setting doesn't justify a DB round trip. Migration tooling is still set up and exercised.                                                      |
+| Search, staging, monitoring                                           | None yet. Vercel logs + Instant Rollback, Supabase logs. Vercel preview deployments disabled or protected.                                         | Previews would hit the production Supabase project and need extra auth redirect URLs.                                                                   |
+| Lighthouse 90+                                                        | Target kept; automated a11y via axe in E2E; Lighthouse run manually before release.                                                                | Lighthouse CI is disproportionate for one user.                                                                                                         |
+| Login                                                                 | **Email one-time code (6 digits).**                                                                                                                | Magic links often open in the wrong browser context on iPad/mobile and home-screen web apps.                                                            |
+| Dev database                                                          | **Local Supabase via the Supabase CLI (Docker).**                                                                                                  | Free, offline, safe migration testing, and a local inbox (Mailpit) for E2E login.                                                                       |
 
 ## 4. Directory structure
 
@@ -86,11 +86,11 @@ Unit and component tests are colocated (`*.test.ts[x]`); E2E tests live in `test
 
 ```ts
 type HubApp = {
-  id: string;                 // stable, kebab-case, unique; path = `/apps/${id}`
+  id: string; // stable, kebab-case, unique; path = `/apps/${id}`
   name: string;
   description?: string;
   icon: LucideIcon;
-  color?: AppColor;           // token name from a fixed union
+  color?: AppColor; // token name from a fixed union
   status: "active" | "coming-soon" | "hidden";
 };
 ```
