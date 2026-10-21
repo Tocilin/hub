@@ -5,6 +5,8 @@ import { cookies } from "next/headers";
 
 import { getPublicEnv } from "@/platform/env";
 
+import { authCookieOptions } from "./cookie-options";
+
 /** Supabase client for Server Components, Server Actions and Route Handlers. Acts as the signed-in user. */
 export async function createSupabaseServerClient() {
   const cookieStore = await cookies();
@@ -14,6 +16,7 @@ export async function createSupabaseServerClient() {
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
+      cookieOptions: authCookieOptions,
       cookies: {
         getAll: () => cookieStore.getAll(),
         setAll(cookiesToSet) {

@@ -39,6 +39,7 @@ To sign in, enter the email at `/login`. Local emails aren't really sent; read t
 - Migrations live in `supabase/migrations/` and are forward-only.
 - `pnpm db:migration <name>` creates one, and `pnpm db:reset` rebuilds the local database from all migrations.
 - Conventions for app tables, RLS and storage: [`docs/architecture.md` §8](docs/architecture.md#8-data--storage-conventions-for-future-apps).
+- **Gotcha:** in `supabase/config.toml`, `[auth.email] enable_signup` turns the email login method itself on or off, so keep it `true`. Sign-ups are blocked by `[auth] enable_signup = false`. In the hosted dashboard, likewise keep the Email provider enabled and turn **Allow new users to sign up** off.
 
 ## Scripts
 

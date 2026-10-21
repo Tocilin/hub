@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 
 import { getPublicEnv } from "@/platform/env";
 import { getServerEnv } from "@/platform/env.server";
+import { authCookieOptions } from "@/platform/supabase/cookie-options";
 
 import { decideRoute } from "./access";
 
@@ -18,6 +19,7 @@ export async function authProxy(request: NextRequest): Promise<NextResponse> {
     env.NEXT_PUBLIC_SUPABASE_URL,
     env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
     {
+      cookieOptions: authCookieOptions,
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll(cookiesToSet, headers) {
@@ -32,10 +34,14 @@ export async function authProxy(request: NextRequest): Promise<NextResponse> {
     },
   );
 
-  // getClaims() verifies the JWT and refreshes it when expired. Don't run code between
+  // getUser() checks the session with the Auth server (and refreshes it). A local JWT check
+  // (getClaims) would accept a signed-out session until it expires, while requireUser()
+  // rejects it, and the two would redirect each other in a loop. Don't run code between
   // creating the client and this call, or sessions can be dropped at random.
-  const { data } = await supabase.auth.getClaims();
-  const email = data?.claims ? (data.claims.email ?? "") : null;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const email = user ? (user.email ?? "") : null;
 
   const decision = decideRoute({
     pathname: request.nextUrl.pathname,

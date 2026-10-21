@@ -101,11 +101,13 @@ Static, typed, ordered by array position. Unit tests validate unique ids, id for
 
 1. **Sign-ups disabled** in Supabase. Login uses `signInWithOtp({ shouldCreateUser: false })`; the single user is created once in the dashboard.
 2. **Approved user:** `HUB_APPROVED_EMAIL` (server-only) is checked by `requireUser()`, which uses `auth.getUser()` (never trusts `getSession()`). It runs in the `(platform)` layout and in every server action. Unapproved identities are signed out and redirected.
-3. **`proxy.ts`** refreshes the session cookie and redirects anonymous users. It is a convenience, **not** the security boundary.
-4. Login responses never reveal whether an email is approved.
-5. The app runtime needs **no Supabase secret/service key** in Phase 1; it is used only by local E2E setup.
-6. Security headers in `next.config` (HSTS, `frame-ancestors`, `Referrer-Policy`, `X-Content-Type-Options`). User-facing errors are generic; no private data in metadata or logs.
-7. All server inputs validated with Zod.
+3. **`proxy.ts`** refreshes the session and redirects by auth state. It is a convenience, **not** the security boundary. It uses `getUser()` like `requireUser()` (not the local-only `getClaims()`): if the two disagreed about a signed-out but unexpired session, they would redirect each other in a loop.
+4. Login responses never reveal whether an email is approved, and only the approved address is ever emailed a code.
+5. Auth cookies are **HttpOnly** (and `Secure` in production). HUB never calls Supabase from the browser, so page scripts never need the session.
+6. The app runtime needs **no Supabase secret/service key** in Phase 1; it is used only by local E2E setup.
+7. Security headers in `next.config` (HSTS, `frame-ancestors`, `Referrer-Policy`, `X-Content-Type-Options`). User-facing errors are generic; no private data in metadata or logs.
+8. All server inputs validated with Zod.
+9. The database is private by default: migrations remove the `anon` role's default access to new tables, sequences and functions, so RLS is never the only barrier.
 
 ## 8. Data & storage conventions (for future apps)
 
