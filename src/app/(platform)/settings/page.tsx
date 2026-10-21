@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 
 import { AppShell } from "@/components/platform/app-shell";
 import { ThemeControl } from "@/components/platform/theme-control";
+import { Button } from "@/components/ui/button";
+import { signOut } from "@/platform/auth/actions";
+import { requireUser } from "@/platform/auth/require-user";
 
 export const metadata: Metadata = { title: "Settings · HUB" };
 
@@ -31,13 +34,21 @@ function SettingsSection({
   );
 }
 
-export default function SettingsPage() {
+export default async function SettingsPage() {
+  const user = await requireUser();
+
   return (
     <AppShell title="Settings" className="max-w-2xl space-y-4">
       <SettingsSection title="Appearance" description="Saved on this device.">
         <ThemeControl />
       </SettingsSection>
-      {/* Account and sign-out arrive with authentication in Milestone 4. */}
+      <SettingsSection title="Account" description={`Signed in as ${user.email}`}>
+        <form action={signOut}>
+          <Button type="submit" variant="outline" size="lg" className="h-11">
+            Sign out
+          </Button>
+        </form>
+      </SettingsSection>
     </AppShell>
   );
 }
